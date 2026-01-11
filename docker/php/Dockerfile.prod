@@ -1,0 +1,9 @@
+FROM php:8.3-fpm
+
+RUN docker-php-ext-install pdo pdo_mysql
+
+# COPY the code into the image instead of mounting it
+COPY ./pub /var/www/html
+
+# Adjust permissions so the web server can read it
+RUN chown -R www-data:www-data /var/www/html

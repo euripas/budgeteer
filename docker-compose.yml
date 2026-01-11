@@ -1,0 +1,30 @@
+services:
+  # The Web Server
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8081:80" # Maps localhost:8080 to container port 80
+    volumes:
+      - ./pub:/var/www/html # Syncs your code
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+
+  # The PHP Application
+  php:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./pub:/var/www/html # Syncs your code so you can edit live
+
+  # The Database
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: my_database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306" # Optional: strictly for local DB tools (like DBeaver/HeidiSQL)
